@@ -5,7 +5,7 @@ const Home = () => {
 
 	const [loading, setLoading] = useState(false);
 	const [allPosts, setAllPosts] = useState(null);
-	const [searchText, setSearchText] = useState(false);
+	const [searchText, setSearchText] = useState('');
 	const [authorizedDelete, setauthorizedDelete] = useState(false);
 	const [authorizedUser, setauthorizedUser] = useState(true);
 	const [password, setPassword] = useState('');
@@ -135,7 +135,6 @@ const Home = () => {
 	}
 
 	const handleSearchChange = (e) => {
-
 		setSearchText(e.target.value);
 
 		setSearchTimeOut(
