@@ -1,39 +1,37 @@
 
 import React from 'react'
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-
-import { logo } from './assets';
-import { Home, CreatePost } from './pages';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import { Login, Home, PrivacyPolicy } from './pages';
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 
 
 const App = () => {
+
+  //vite uses import.meta.env.key not process.env
+
+
   return (
 
+    <GoogleOAuthProvider clientId={`${import.meta.env.VITE_GOOGLE_CLIENT_ID}`} >
 
-    <BrowserRouter>
-      <header className='w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4] '  >
-        <Link to='/' >
-          <img
-            className='w-28 object-contain'
-            src={logo} alt='logo'
-          />
-        </Link>
-        <Link to='/create-post'
-          className='font-inter font-medium bg-[#9fbf93] text-white px-4 py-2 rounded-md'
-        >Create</Link>
-      </header>
-      <main className='sm:p-8 px-4 py-8 w-full bg-[#d4d8cb] min-h-[calc(100vh-73px)]' >
-        <Routes  >
-          <Route className='' path='/' element={<Home />} />
-          <Route className='' path='/create-post' element={<CreatePost />} />
-        </Routes>
+      <BrowserRouter>
 
-      </main>
+        <div className=' bg-[#d4d8cb] w-full h-full' >
+          <Routes  >
+            <Route className='' path='/login' element={<Login />} />
+            <Route className='' path='/*' element={<Home />} />
+            <Route className='' path='/privacy-policy' element={<PrivacyPolicy />} />
+
+          </Routes>
+
+        </div>
+
+      </BrowserRouter>
+
+    </GoogleOAuthProvider>
 
 
-
-    </BrowserRouter>
 
   )
 }
