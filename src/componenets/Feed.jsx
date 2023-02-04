@@ -10,7 +10,7 @@ const Feed = () => {
    const [allPosts, setAllPosts] = useState(null);
    const [searchText, setSearchText] = useState('');
    const [authorizedDelete, setauthorizedDelete] = useState(false);
-   const [authorizedUser, setauthorizedUser] = useState(true);
+   const [authorizedUser, setauthorizedUser] = useState(false);
    const [password, setPassword] = useState('');
    const [result, setResult] = useState('');
    const [nameDel, setNameDel] = useState('');
@@ -44,9 +44,6 @@ const Feed = () => {
 
    const fetchPosts = async () => {
 
-      if (localStorage.getItem('user') == import.meta.env.VITE_ADMIN) {
-         setauthorizedDelete(true);
-      }
 
       setLoading(true)
       const items = JSON.parse(localStorage.getItem('user'));
@@ -82,8 +79,13 @@ const Feed = () => {
    }
 
 
-   useEffect(() => {
 
+   useEffect(() => {
+      if (import.meta.env.VITE_ADMIN == JSON.parse(localStorage.getItem('user')).sub) {
+         setauthorizedUser(true);
+      } else {
+         setauthorizedUser(false);
+      }
       fetchPosts();
    }, []);
 
@@ -115,7 +117,7 @@ const Feed = () => {
    }
 
 
-   const handleSubmit = async () => {
+   const handleAuthorizedDeletePrompt = async () => {
 
       if (password === 'ace') {
 
@@ -178,6 +180,18 @@ const Feed = () => {
       fetchPosts();
       setauthorizedDelete(false);
    }
+
+
+
+
+
+
+
+
+
+
+
+
 
    return (
       <section className='max w-7xl mx-auto' >
@@ -253,7 +267,7 @@ const Feed = () => {
                                  {
                                     authorizedDelete && (
                                        <div className='fixed bg-[rgba(0,0,0,0.25)] top-0 left-0 w-full h-full border border-black' >
-                                          <div className='absolute top-1/3 left-1/3 w-[320px] h-[320px] bg-slate-400 flex justify-center items-center flex-col' >
+                                          <div className='absolute top-1/3 left-1/3 w-[320px] h-[320px] bg-[#9fbf93] flex justify-center items-center flex-col' >
                                              <button className='bg-orange-300 w-8 shadow-md hover:text-white absolute top-0 right-0'
                                                 onClick={handleClose}
 
@@ -261,7 +275,7 @@ const Feed = () => {
                                                 X
                                              </button>
 
-                                             <label for='nameRemove'>key</label>
+                                             <label htmlFor='nameRemove'>key</label>
 
                                              <input
                                                 className='mt-2 mb-4'
@@ -271,7 +285,7 @@ const Feed = () => {
                                                 onChange={handleChangeName}
 
                                              />
-                                             <label for='val'>Value</label>
+                                             <label htmlFor='val'>Value</label>
 
                                              <input
                                                 className='mt-2 mb-4'
@@ -282,7 +296,7 @@ const Feed = () => {
 
                                              />
 
-                                             <label for='authorization'>Authorization</label>
+                                             <label htmlFor='authorization'>Authorization</label>
                                              <input
                                                 className='mt-2'
                                                 name='authorization'
@@ -292,7 +306,7 @@ const Feed = () => {
 
                                              />
                                              <button className='bg-orange-300 w-8 shadow-md hover:text-white mt-2'
-                                                onClick={handleSubmit}
+                                                onClick={handleAuthorizedDeletePrompt}
 
                                              >
                                                 {'->'}

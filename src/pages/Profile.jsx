@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Card } from '../componenets';
+import { AiOutlinePoweroff } from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom'
+
 
 const Profile = () => {
 
    //standard
-
+   const navigate = useNavigate();
 
    //state
    const [userPosts, setuserPosts] = useState(null);
@@ -16,6 +19,12 @@ const Profile = () => {
       console.log(userPosts);
    }, []);
 
+
+   const logout = () => {
+
+      navigate('/login');
+
+   }
 
 
    const RenderCards = ({ data, title }) => {
@@ -77,11 +86,17 @@ const Profile = () => {
                   {user.name}
                </h1>
 
-               <div className='bg-[#617868] w-screen p-2 mt-10' >
-                  <p className='flex flex-col justify-center items-center' >
+               <div className='bg-[#617868] w-screen p-2 mt-10 flex justify-end items-center' >
+                  <div className='w-1/3' >
+
+                  </div>
+
+                  <p className='flex flex-col justify-center items-center w-1/3' >
                      {
                         userPosts ? (
-                           `Total Posts : ${userPosts?.length}`
+                           <p className='' >
+                              Total Posts : <span className=' font-bold'>{userPosts?.length}</span>
+                           </p>
 
                         ) : (
 
@@ -89,6 +104,14 @@ const Profile = () => {
                         )
                      }
                   </p>
+                  <div className='w-1/3  flex justify-end items-end' >
+                     <button className='bg-[#9fbf93] p-1 rounded-md hover:cursor-pointer mr-14 shadow-lg text-white w-10 flex items-center justify-center hover:bg-red-700 hover:scale-110'
+                        onClick={logout}
+                     >
+                        <AiOutlinePoweroff />
+                     </button>
+
+                  </div>
 
                </div>
 

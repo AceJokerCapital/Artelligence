@@ -66,13 +66,13 @@ const Home = () => {
 				</div>
 
 
-				<div className='flex flex-col justify-center items-center gap-3' >
+				<div className='flex flex-col justify-center items-center gap-3 ' >
 					<Link to={`${btnState1}`}
-						className='max-xs:w-14 max-xs:text-[12px] w-20 flex items-center justify-center font-mono font-medium bg-[#9fbf93] text-white px-4 py-2 rounded-md'
+						className='max-xs:w-14 max-xs:text-[12px] w-20 flex items-center justify-center font-mono font-medium bg-[#9fbf93] text-white px-4 py-2 rounded-md hover:scale-105'
 					>{`${btnText1}`}</Link>
 
 					<Link to={`${btnState}`}
-						className='max-xs:w-14 max-xs:text-[12px] w-20 flex items-center justify-center first-letter font-mono font-medium bg-[#9fbf93] text-white px-4 py-2 rounded-md'
+						className='max-xs:w-14 max-xs:text-[12px] w-20 flex items-center justify-center first-letter font-mono font-medium bg-[#9fbf93] text-white px-4 py-2 rounded-md hover:scale-105'
 					>{`${btnText}`}</Link>
 				</div>
 			</header>

@@ -14,14 +14,14 @@ const PrivacyPolicy = () => {
             <header className='w-full flex justify-between items-center bg-[#809475] sm:px-8 px-4 py-4 border-b border-b-[#e6ebf4] '  >
                <Link to='/' className='flex flex-row justify-center items-center gap-2' >
                   <img
-                     className='w-28 object-contain'
+                     className='max-xs:w-20 w-28 object-contain'
                      src={logo} alt='logo'
                   />
-                  <h1>R T E L L I G E N C E</h1>
+                  <h1 className='max-xs:text-[14px] sm:text-[18px] md:text-[21px]'>R T E L L I G E N C E</h1>
                </Link>
                <div className='flex flex-col justify-center items-center gap-3' >
                   <Link to={`/`}
-                     className='w-20 flex items-center justify-center font-mono font-medium bg-[#9fbf93] text-white px-4 py-2 rounded-md'
+                     className='max-xs:w-14 max-xs:text-[12px] w-20 flex items-center justify-center font-mono font-medium bg-[#9fbf93] text-white px-4 py-2 rounded-md hover:scale-105'
                   >{`Home`}</Link>
 
 
