@@ -21,9 +21,14 @@ const Feed = () => {
 
 
    const RenderCards = ({ data, title }) => {
-
       if (data?.length > 0)
-         return data.map(post => <Card key={post._id} {...post} />)
+         return data.map((post) => (
+            <Card key={post._id} _id={post._id} name={post.name} prompt={post.prompt} photo={post.photo} isProfile={false} />
+
+         )
+
+
+         )
       // above code maps over data gets each posts and then makes a card for each post. A card will consist of the post id and all data of the previous post will be passed into it
       return (
          <h2 className='mt-5 font-bold text-[#9fbf93] text-xl uppercase' >
@@ -33,14 +38,19 @@ const Feed = () => {
 
    }
 
+
+
+
+
    const fetchPosts = async () => {
+
+      if (localStorage.getItem('user') == import.meta.env.VITE_ADMIN) {
+         setauthorizedDelete(true);
+      }
+
       setLoading(true)
       const items = JSON.parse(localStorage.getItem('user'));
-      console.log(items);
 
-      if (items) {
-         console.log('yes');
-      }
 
       try {
          const response = await fetch('https://artilligence.onrender.com/api/v1/post-x', {
@@ -53,7 +63,10 @@ const Feed = () => {
 
          if (response.ok) {
             const result = await response.json();
+            const cloneRes = structuredClone(result);
+            console.log(cloneRes.data.reverse());
             setAllPosts(result.data.reverse())
+
          }
 
       } catch (error) {
@@ -212,11 +225,13 @@ const Feed = () => {
                               <RenderCards
                                  data={searchResult}
                                  title='No search results found'
+                                 isProfile={false}
                               />
                            ) : (
                               <RenderCards
                                  data={allPosts}
                                  title='No posts found'
+                                 isProfile={false}
                               />
 
                            )

@@ -17,7 +17,7 @@ const App = () => {
 
       <BrowserRouter>
 
-        <div className=' bg-[#d4d8cb] w-full h-full' >
+        <div className=' bg-[#d4d8cb] flex flex-col' >
           <Routes  >
             <Route className='' path='/login' element={<Login />} />
             <Route className='' path='/*' element={<Home />} />
