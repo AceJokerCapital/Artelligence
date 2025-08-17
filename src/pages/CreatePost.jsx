@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { preview } from '../assets'
 import { getRandomPrompt } from '../utils';
-import { FormField, Loader } from '../componenets'
+import { FormField, Loader } from '../components'
 
 const CreatePost = () => {
     //standard
@@ -35,7 +35,7 @@ const CreatePost = () => {
             try {
                 setGeneratingImg(true);
 
-                const response = await fetch('https://artilligence.onrender.com/api/v1/dalle-x', {
+                const response = await fetch('https://artelligence.onrender.com/api/v1/dalle-x', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const CreatePost = () => {
                 setLoading(true);
 
                 try {
-                    const response2 = await fetch('https://artilligence.onrender.com/api/v1/post-x', {
+                    const response2 = await fetch('https://artelligence.onrender.com/api/v1/post-x', {
                         method: 'POST',
                         headers: {
                             "Content-Type": 'application/json',

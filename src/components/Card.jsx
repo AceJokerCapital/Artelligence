@@ -23,7 +23,7 @@ const Card = ({ _id, name, prompt, photo, isProfile }) => {
     if (clickOnce) {
       clickOnce = false;
       try {
-        await fetch('https://artilligence.onrender.com/api/v1/post-x/profile-posts-delete', {
+        await fetch('https://artelligence.onrender.com/api/v1/post-x/profile-posts-delete', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt, photo }),

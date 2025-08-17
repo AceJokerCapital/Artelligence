@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Card } from '../componenets';
+import { Card } from '../components';
 import { AiOutlinePoweroff } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
 
@@ -49,7 +49,7 @@ const Profile = () => {
       console.log(user);
       try {
 
-         const response = await fetch('https://artilligence.onrender.com/api/v1/post-x/profile-posts', {
+         const response = await fetch('https://artelligence.onrender.com/api/v1/post-x/profile-posts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sub: user.sub })

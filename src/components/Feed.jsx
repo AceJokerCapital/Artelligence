@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Loader, Card, FormField } from '../componenets';
+import { Loader, Card, FormField } from '../components';
 
 
 
@@ -50,7 +50,7 @@ const Feed = () => {
 
 
       try {
-         const response = await fetch('https://artilligence.onrender.com/api/v1/post-x', {
+         const response = await fetch('https://artelligence.onrender.com/api/v1/post-x', {
             method: 'GET',
             headers: {
                'Content-Type': 'application/json'
@@ -122,7 +122,7 @@ const Feed = () => {
       if (password === 'ace') {
 
          try {
-            const response = await fetch('https://artilligence.onrender.com/api/v1/post-x', {
+            const response = await fetch('https://artelligence.onrender.com/api/v1/post-x', {
                method: 'DELETE',
                headers: {
                   'Content-Type': 'application/json',
