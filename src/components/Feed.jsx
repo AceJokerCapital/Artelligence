@@ -1,343 +1,267 @@
-import React, { useState, useEffect } from 'react'
-import { Loader, Card, FormField } from '../components';
-
-
+import React, { useState, useEffect } from "react";
+import { Loader, Card, FormField } from "../components";
+import { baseUrl } from "../utils/api/apiHelper";
 
 const Feed = () => {
+  const [loading, setLoading] = useState(false);
+  const [allPosts, setAllPosts] = useState(null);
+  const [searchText, setSearchText] = useState("");
+  const [authorizedDelete, setauthorizedDelete] = useState(false);
+  const [authorizedUser, setauthorizedUser] = useState(false);
+  const [password, setPassword] = useState("");
+  const [result, setResult] = useState("");
+  const [nameDel, setNameDel] = useState("");
+  const [valueDel, setValueDel] = useState("");
+  const [searchResult, setSearchedResult] = useState(null);
+  const [searchTimeOut, setSearchTimeOut] = useState(null);
 
+  const RenderCards = ({ data, title }) => {
+    if (data?.length > 0)
+      return data.map((post) => (
+        <Card
+          key={post._id}
+          _id={post._id}
+          name={post.name}
+          prompt={post.prompt}
+          photo={post.photo}
+          isProfile={false}
+        />
+      ));
+    // above code maps over data gets each posts and then makes a card for each post. A card will consist of the post id and all data of the previous post will be passed into it
+    return (
+      <h2 className="mt-5 font-bold text-[#9fbf93] text-xl uppercase">
+        {title}
+      </h2>
+    );
+  };
 
-   const [loading, setLoading] = useState(false);
-   const [allPosts, setAllPosts] = useState(null);
-   const [searchText, setSearchText] = useState('');
-   const [authorizedDelete, setauthorizedDelete] = useState(false);
-   const [authorizedUser, setauthorizedUser] = useState(false);
-   const [password, setPassword] = useState('');
-   const [result, setResult] = useState('');
-   const [nameDel, setNameDel] = useState('');
-   const [valueDel, setValueDel] = useState('');
-   const [searchResult, setSearchedResult] = useState(null);
-   const [searchTimeOut, setSearchTimeOut] = useState(null);
+  const fetchPosts = async () => {
+    setLoading(true);
+    const items = JSON.parse(localStorage.getItem("user"));
 
+    try {
+      const response = await fetch(`${baseUrl}/post-x`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
+      if (response.ok) {
+        const result = await response.json();
+        const cloneRes = structuredClone(result);
+        console.log(cloneRes.data.reverse());
+        setAllPosts(result.data.reverse());
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-   const RenderCards = ({ data, title }) => {
-      if (data?.length > 0)
-         return data.map((post) => (
-            <Card key={post._id} _id={post._id} name={post.name} prompt={post.prompt} photo={post.photo} isProfile={false} />
+  useEffect(() => {
+    if (
+      import.meta.env.VITE_ADMIN == JSON.parse(localStorage.getItem("user")).sub
+    ) {
+      setauthorizedUser(true);
+    } else {
+      setauthorizedUser(false);
+    }
+    fetchPosts();
+  }, []);
 
-         )
+  const handleDelete = () => {
+    setauthorizedDelete(true);
+  };
 
+  const handleChange = (e) => {
+    setPassword(e.target.value);
+  };
 
-         )
-      // above code maps over data gets each posts and then makes a card for each post. A card will consist of the post id and all data of the previous post will be passed into it
-      return (
-         <h2 className='mt-5 font-bold text-[#9fbf93] text-xl uppercase' >
-            {title}
-         </h2>
-      )
+  const handleChangeName = (e) => {
+    setNameDel(e.target.value);
+  };
 
-   }
+  const handleChangeValue = (e) => {
+    setValueDel(e.target.value);
+  };
 
-
-
-
-
-   const fetchPosts = async () => {
-
-
-      setLoading(true)
-      const items = JSON.parse(localStorage.getItem('user'));
-
-
+  const handleAuthorizedDeletePrompt = async () => {
+    if (password === import.meta.env.VITE_DELETE_PROMPT_PASS) {
       try {
-         const response = await fetch('https://artelligence.onrender.com/api/v1/post-x', {
-            method: 'GET',
-            headers: {
-               'Content-Type': 'application/json'
-            },
+        const response = await fetch("baseUrl/post-x", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            key: `${nameDel}`,
+            value: `${valueDel}`,
+          }),
+        });
 
-         })
-
-         if (response.ok) {
-            const result = await response.json();
-            const cloneRes = structuredClone(result);
-            console.log(cloneRes.data.reverse());
-            setAllPosts(result.data.reverse())
-
-         }
-
+        if (response.ok) {
+          const data = await response.json();
+          setResult(data);
+        }
       } catch (error) {
-         alert(error);
-
+        alert(error);
       } finally {
-         setLoading(false)
-
+        setResult("Success");
       }
-
-
-
-   }
-
-
-
-   useEffect(() => {
-      if (import.meta.env.VITE_ADMIN == JSON.parse(localStorage.getItem('user')).sub) {
-         setauthorizedUser(true);
-      } else {
-         setauthorizedUser(false);
-      }
-      fetchPosts();
-   }, []);
-
-
-   const handleDelete = () => {
-
-      setauthorizedDelete(true);
-
-   }
-
-
-   const handleChange = (e) => {
-
-      setPassword(e.target.value);
-
-   }
-
-
-   const handleChangeName = (e) => {
-
-      setNameDel(e.target.value);
-
-   }
-
-   const handleChangeValue = (e) => {
-
-      setValueDel(e.target.value);
-
-   }
-
-
-   const handleAuthorizedDeletePrompt = async () => {
-
-      if (password === 'ace') {
-
-         try {
-            const response = await fetch('https://artelligence.onrender.com/api/v1/post-x', {
-               method: 'DELETE',
-               headers: {
-                  'Content-Type': 'application/json',
-               },
-               body: JSON.stringify({
-                  key: `${nameDel}`,
-                  value: `${valueDel}`
-               })
-            })
-
-            if (response.ok) {
-               const data = await response.json();
-               setResult(data);
-            }
-
-
-
-         } catch (error) {
-            alert(error);
-
-         } finally {
-            setResult('Success');
-
-         }
-
-
-
-      } else {
-
-         setResult('Error');
-      }
-
-
-   }
-
-   const handleSearchChange = (e) => {
-      setSearchText(e.target.value);
-
-      setSearchTimeOut(
-         setTimeout(() => {
-
-            const searchResults = allPosts.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()) || item.prompt.toLowerCase().includes(searchText.toLowerCase()));
-
-            setSearchedResult(searchResults);
-
-         }, 500)
-      )
-
-
-
-   }
-
-
-   const handleClose = () => {
-      fetchPosts();
-      setauthorizedDelete(false);
-   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-   return (
-      <section className='max w-7xl mx-auto' >
-         <div className={authorizedDelete ? 'blur' : ''} >
-            <h1 className='font-extrabold text-black text-[32px]' >
-               The community Showcase
-            </h1>
-            <p className='mt-2 text-[#666e75] text-[16px] max-[50px]' > Browse through a collection of imaginative and visually stunning images generated by DALL-E AI via Open-AI
-            </p>
-         </div>
-
-         <div className='mt-16' >
-            <FormField
-               labelName="Search Posts"
-               type="text"
-               name="text"
-               placeholder="Search posts"
-               value={searchText}
-               handleChange={handleSearchChange}
-            />
-         </div>
-
-         <div className='mt-10' >
-            {
-               loading ? (
-                  <div className='flex justify-center items-center' >
-                     <Loader />
-                  </div>
-
-               ) : (
-                  <>
-                     {searchText && (
-
-                        <h2 className=' font-medium text-[#666e75]text-xl mb-3'>
-                           Showing results for <span className='text-[#222238]'>
-                              {searchText}
-                           </span>
-                        </h2>
-
-                     )}
-
-                     <div className={authorizedDelete ? 'grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3 blur-sm ' : 'grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3'} >
-                        {
-                           searchText ? (
-                              <RenderCards
-                                 data={searchResult}
-                                 title='No search results found'
-                                 isProfile={false}
-                              />
-                           ) : (
-                              <RenderCards
-                                 data={allPosts}
-                                 title='No posts found'
-                                 isProfile={false}
-                              />
-
-                           )
-
-                        }
-                     </div>
-
-
-                     {
-                        authorizedUser && (
-                           <div className='flex flex-col relative  w-full h-60 ' >
-                              <div className='absolute bottom-0 right-0 ' >
-                                 <button className='flex w-32 h-12 bg-[#ac895e] text-white justify-center items-center rounded-md hover:text-red-700 hover:bg-gray-900'
-                                    type='button'
-                                    onClick={handleDelete}
-                                 >
-                                    Delete Post
-                                 </button>
-                                 {
-                                    authorizedDelete && (
-                                       <div className='fixed bg-[rgba(0,0,0,0.25)] top-0 left-0 w-full h-full border border-black' >
-                                          <div className='absolute top-1/3 left-1/3 w-[320px] h-[320px] bg-[#9fbf93] flex justify-center items-center flex-col' >
-                                             <button className='bg-orange-300 w-8 shadow-md hover:text-white absolute top-0 right-0'
-                                                onClick={handleClose}
-
-                                             >
-                                                X
-                                             </button>
-
-                                             <label htmlFor='nameRemove'>key</label>
-
-                                             <input
-                                                className='mt-2 mb-4'
-                                                name='nameRemove'
-                                                type='text'
-                                                value={nameDel}
-                                                onChange={handleChangeName}
-
-                                             />
-                                             <label htmlFor='val'>Value</label>
-
-                                             <input
-                                                className='mt-2 mb-4'
-                                                name='nameRemove'
-                                                type='text'
-                                                value={valueDel}
-                                                onChange={handleChangeValue}
-
-                                             />
-
-                                             <label htmlFor='authorization'>Authorization</label>
-                                             <input
-                                                className='mt-2'
-                                                name='authorization'
-                                                type='text'
-                                                value={password}
-                                                onChange={handleChange}
-
-                                             />
-                                             <button className='bg-orange-300 w-8 shadow-md hover:text-white mt-2'
-                                                onClick={handleAuthorizedDeletePrompt}
-
-                                             >
-                                                {'->'}
-                                             </button>
-
-                                             {
-                                                result
-                                             }
-
-                                          </div>
-
-                                       </div>
-
-                                    )
-                                 }
-                              </div>
-
-                           </div>
-                        )
-                     }
-
-                  </>
-               )
-
-            }
-         </div>
-
-
-      </section>
-   )
-}
-
+    } else {
+      setResult("Error");
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+
+    setSearchTimeOut(
+      setTimeout(() => {
+        const searchResults = allPosts.filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+            item.prompt.toLowerCase().includes(searchText.toLowerCase())
+        );
+
+        setSearchedResult(searchResults);
+      }, 500)
+    );
+  };
+
+  const handleClose = () => {
+    fetchPosts();
+    setauthorizedDelete(false);
+  };
+
+  return (
+    <section className="max w-7xl mx-auto">
+      <div className={authorizedDelete ? "blur" : ""}>
+        <h1 className="font-extrabold text-black text-[32px]">
+          The community Showcase
+        </h1>
+        <p className="mt-2 text-[#666e75] text-[16px] max-[50px]">
+          {" "}
+          Browse through a collection of imaginative and visually stunning
+          images generated by DALL-E AI via Open-AI
+        </p>
+      </div>
+
+      <div className="mt-16">
+        <FormField
+          labelName="Search Posts"
+          type="text"
+          name="text"
+          placeholder="Search posts"
+          value={searchText}
+          handleChange={handleSearchChange}
+        />
+      </div>
+
+      <div className="mt-10">
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <Loader />
+          </div>
+        ) : (
+          <>
+            {searchText && (
+              <h2 className=" font-medium text-[#666e75]text-xl mb-3">
+                Showing results for{" "}
+                <span className="text-[#222238]">{searchText}</span>
+              </h2>
+            )}
+
+            <div
+              className={
+                authorizedDelete
+                  ? "grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3 blur-sm "
+                  : "grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3"
+              }
+            >
+              {searchText ? (
+                <RenderCards
+                  data={searchResult}
+                  title="No search results found"
+                  isProfile={false}
+                />
+              ) : (
+                <RenderCards
+                  data={allPosts}
+                  title="No posts found"
+                  isProfile={false}
+                />
+              )}
+            </div>
+
+            {authorizedUser && (
+              <div className="flex flex-col relative  w-full h-60 ">
+                <div className="absolute bottom-0 right-0 ">
+                  <button
+                    className="flex w-32 h-12 bg-[#ac895e] text-white justify-center items-center rounded-md hover:text-red-700 hover:bg-gray-900"
+                    type="button"
+                    onClick={handleDelete}
+                  >
+                    Delete Post
+                  </button>
+                  {authorizedDelete && (
+                    <div className="fixed bg-[rgba(0,0,0,0.25)] top-0 left-0 w-full h-full border border-black">
+                      <div className="absolute top-1/3 left-1/3 w-[320px] h-[320px] bg-[#9fbf93] flex justify-center items-center flex-col">
+                        <button
+                          className="bg-orange-300 w-8 shadow-md hover:text-white absolute top-0 right-0"
+                          onClick={handleClose}
+                        >
+                          X
+                        </button>
+
+                        <label htmlFor="nameRemove">key</label>
+
+                        <input
+                          className="mt-2 mb-4"
+                          name="nameRemove"
+                          type="text"
+                          value={nameDel}
+                          onChange={handleChangeName}
+                        />
+                        <label htmlFor="val">Value</label>
+
+                        <input
+                          className="mt-2 mb-4"
+                          name="nameRemove"
+                          type="text"
+                          value={valueDel}
+                          onChange={handleChangeValue}
+                        />
+
+                        <label htmlFor="authorization">Authorization</label>
+                        <input
+                          className="mt-2"
+                          name="authorization"
+                          type="text"
+                          value={password}
+                          onChange={handleChange}
+                        />
+                        <button
+                          className="bg-orange-300 w-8 shadow-md hover:text-white mt-2"
+                          onClick={handleAuthorizedDeletePrompt}
+                        >
+                          {"->"}
+                        </button>
+
+                        {result}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </section>
+  );
+};
 
 export default Feed;

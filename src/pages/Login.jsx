@@ -3,6 +3,7 @@ import { logo } from "../assets";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "./../utils/api/apiHelper";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Login = () => {
 
   useEffect(() => {
     localStorage.clear();
+    console.log(baseUrl);
   }, []);
 
   const googleResponse = (response) => {
@@ -32,18 +34,15 @@ const Login = () => {
 
   const mongoAddUser = async (doc) => {
     try {
-      const response = await fetch(
-        "https://artelligence.onrender.com/api/v1/user-x",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(doc),
-        }
-      );
+      const response = await fetch(`${baseUrl}/user-x`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(doc),
+      });
 
       const data = await response.json();
 
-      console.log(data);
+      console.log(data, import.meta.env.VITE_API);
 
       if (response.ok) {
         if (localStorage.getItem("user")) {
