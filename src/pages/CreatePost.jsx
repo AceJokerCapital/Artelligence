@@ -5,10 +5,12 @@ import { preview } from "../assets";
 import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
 import { baseUrl } from "../utils/api/apiHelper";
+import { useApiKeys } from "../../hooks/useApiKeys";
 
 const CreatePost = () => {
   //standard
   const navigate = useNavigate();
+  const { getApiKey } = useApiKeys();
 
   //states
   const [form, setForm] = useState({
@@ -26,6 +28,7 @@ const CreatePost = () => {
   const generateImage = async () => {
     if (form.prompt) {
       try {
+        const apiKey = await getApiKey();
         setGeneratingImg(true);
 
         const response = await fetch(`${baseUrl}/dalle-x`, {
@@ -35,6 +38,7 @@ const CreatePost = () => {
           },
           body: JSON.stringify({
             prompt: form.prompt,
+            apiKey,
           }), //body object sent to that endpoint furthermore, we use stringify to make a json object
         });
 

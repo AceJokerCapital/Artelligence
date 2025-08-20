@@ -1,17 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Card } from "../components";
-import { AiOutlinePoweroff, AiOutlineKey, AiOutlinePlus } from "react-icons/ai";
+import {
+  AiOutlinePoweroff,
+  AiOutlineKey,
+  AiOutlinePlus,
+  AiFillEye,
+  AiFillEyeInvisible,
+} from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";
 import { baseUrl } from "../utils/api/apiHelper";
+import { useApiKeys } from "../../hooks/useApiKeys";
 
 const Profile = () => {
   //standard
   const navigate = useNavigate();
-
+  const { apiKey, fetchUserKey, updateApiKey } = useApiKeys();
   //state
   const [userPosts, setUserPosts] = useState(null);
-  const [apiKey, setApiKey] = useState(null);
+  const [showApiKey, setShowApiKey] = useState(false);
+
   const inputRef = useRef(null);
 
   //function
@@ -65,65 +73,11 @@ const Profile = () => {
     }
   };
 
-  const fetchUserKey = async () => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const fetchKeyRes = await fetch(
-        `${baseUrl}/user-x/api-key/${user?.sub}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!fetchKeyRes) {
-        console.log("api key does not exist for uer");
-        return;
-      }
-
-      const apiKeyData = await fetchKeyRes.json();
-
-      if (!apiKeyData.success) {
-        console.log("retrieval failed");
-        return;
-      }
-
-      setApiKey(apiKeyData.data.apiKey);
-    } catch (error) {
-      console.log("fetchUserKey: ", error);
-    }
-  };
-
-  const updateApiKey = async () => {
+  async function handleUpdateApiKey() {
     const value = inputRef.current.value;
 
-    if (!value && value == "") {
-      alert("Api key is empty, please provide a key");
-      return;
-    }
-
-    try {
-      let user = JSON.parse(localStorage.getItem("user"));
-
-      const response = await fetch(`${baseUrl}/user-x/api-key`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sub: user.sub,
-          apiKey: value,
-        }),
-      });
-
-      const result = await response.json();
-      alert(result?.message);
-    } catch (error) {
-      console.log(`unknown error while updating api key: ${error}`);
-    }
-  };
+    await updateApiKey(value);
+  }
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -174,17 +128,32 @@ const Profile = () => {
             </h1>
             {apiKey ? (
               <>
-                <input
-                  type="password"
-                  className="border border-emerald-800 rounded-md w-2/4 focus:ring-0 outline-none pl-2"
-                  ref={inputRef}
-                  defaultValue={apiKey}
-                />
+                <div className="flex flex-col gap-1 w-2/4">
+                  <div className="w-full flex justify-end">
+                    {showApiKey ? (
+                      <AiFillEye
+                        onClick={() => setShowApiKey((prev) => (prev = !prev))}
+                        className="cursor-pointer"
+                      />
+                    ) : (
+                      <AiFillEyeInvisible
+                        onClick={() => setShowApiKey((prev) => (prev = !prev))}
+                        className="cursor-pointer"
+                      />
+                    )}
+                  </div>
+                  <input
+                    type={`${showApiKey ? "text" : "password"}`}
+                    className="border border-emerald-800 rounded-md focus:ring-0 outline-none pl-2"
+                    ref={inputRef}
+                    defaultValue={apiKey}
+                  />
+                </div>
                 <Button
                   icon={<AiOutlinePlus />}
                   text={"Update"}
                   btnClass={"ml-4"}
-                  btnFn={updateApiKey}
+                  btnFn={handleUpdateApiKey}
                 />
               </>
             ) : (
@@ -198,7 +167,7 @@ const Profile = () => {
                   icon={<AiOutlinePlus />}
                   text={"Add"}
                   btnClass={"ml-4"}
-                  btnFn={updateApiKey}
+                  btnFn={handleUpdateApiKey}
                 />
               </>
             )}
