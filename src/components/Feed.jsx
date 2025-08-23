@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Loader, Card, FormField } from "../components";
 import { baseUrl } from "../utils/api/apiHelper";
+import { authFetch } from "../utils/api/authFetch";
+
 
 const Feed = () => {
   const [loading, setLoading] = useState(false);
@@ -40,11 +42,12 @@ const Feed = () => {
     const items = JSON.parse(localStorage.getItem("user"));
 
     try {
-      const response = await fetch(`${baseUrl}/post-x`, {
+      const response = await authFetch(`${baseUrl}/post`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -90,7 +93,7 @@ const Feed = () => {
   const handleAuthorizedDeletePrompt = async () => {
     if (password === import.meta.env.VITE_DELETE_PROMPT_PASS) {
       try {
-        const response = await fetch("baseUrl/post-x", {
+        const response = await authFetch(`${baseUrl}/post`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -99,6 +102,7 @@ const Feed = () => {
             key: `${nameDel}`,
             value: `${valueDel}`,
           }),
+          credentials: 'include'
         });
 
         if (response.ok) {

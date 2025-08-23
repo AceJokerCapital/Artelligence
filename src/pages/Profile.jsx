@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";
 import { baseUrl } from "../utils/api/apiHelper";
 import { useApiKeys } from "../../hooks/useApiKeys";
+import { authFetch } from "../utils/api/authFetch";
 
 const Profile = () => {
   //standard
@@ -58,7 +59,7 @@ const Profile = () => {
   const fetchUserPost = async () => {
     console.log(user);
     try {
-      const response = await fetch(`${baseUrl}/post-x/profile-posts`, {
+      const response = await authFetch(`${baseUrl}/post/profile-posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sub: user.sub }),
@@ -75,7 +76,6 @@ const Profile = () => {
 
   async function handleUpdateApiKey() {
     const value = inputRef.current.value;
-
     await updateApiKey(value);
   }
 

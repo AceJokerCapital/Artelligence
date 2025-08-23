@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { Login, Home, PrivacyPolicy } from "./pages";
+import { Login, PrivacyPolicy } from "./pages";
+import HomeLayout from "../layouts/HomeLayout";
+
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const App = () => {
@@ -12,7 +14,7 @@ const App = () => {
         <div className=" bg-[#d4d8cb] flex flex-col">
           <Routes>
             <Route className="" path="/login" element={<Login />} />
-            <Route className="" path="/*" element={<Home />} />
+            <Route className="" path="/*" element={<HomeLayout />} />
             <Route
               className=""
               path="/privacy-policy"

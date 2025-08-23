@@ -34,7 +34,7 @@ const Login = () => {
 
   const mongoAddUser = async (doc) => {
     try {
-      const response = await fetch(`${baseUrl}/user-x`, {
+      const response = await fetch(`${baseUrl}/user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

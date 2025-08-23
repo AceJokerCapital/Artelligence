@@ -6,6 +6,7 @@ import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
 import { baseUrl } from "../utils/api/apiHelper";
 import { useApiKeys } from "../../hooks/useApiKeys";
+import { authFetch } from "../utils/api/authFetch";
 
 const CreatePost = () => {
   //standard
@@ -31,7 +32,7 @@ const CreatePost = () => {
         const apiKey = await getApiKey();
         setGeneratingImg(true);
 
-        const response = await fetch(`${baseUrl}/dalle-x`, {
+        const response = await authFetch(`${baseUrl}/dalle`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -40,6 +41,7 @@ const CreatePost = () => {
             prompt: form.prompt,
             apiKey,
           }), //body object sent to that endpoint furthermore, we use stringify to make a json object
+          credentials: "include",
         });
 
         const res = await response.json();
@@ -87,7 +89,7 @@ const CreatePost = () => {
         setLoading(true);
 
         try {
-          const response2 = await fetch("baseUrl/post-x", {
+          const response2 = await authFetch(`${baseUrl}/post`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

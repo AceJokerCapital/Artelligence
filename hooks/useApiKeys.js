@@ -7,18 +7,16 @@ export function useApiKeys() {
   const fetchUserKey = useCallback(async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const fetchKeyRes = await fetch(
-        `${baseUrl}/user-x/api-key/${user?.sub}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const fetchKeyRes = await fetch(`${baseUrl}/api-key/${user?.sub}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
       if (!fetchKeyRes) {
-        console.log("api key does not exist for uer");
+        console.log("api key does not exist for user");
         return;
       }
 
@@ -43,8 +41,7 @@ export function useApiKeys() {
 
     try {
       let user = JSON.parse(localStorage.getItem("user"));
-
-      const response = await fetch(`${baseUrl}/user-x/api-key`, {
+      const response = await fetch(`${baseUrl}/api-key`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,6 +50,7 @@ export function useApiKeys() {
           sub: user.sub,
           apiKey: value,
         }),
+        credentials: "include",
       });
 
       const result = await response.json();

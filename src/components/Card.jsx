@@ -21,7 +21,7 @@ const Card = ({ _id, name, prompt, photo, isProfile }) => {
     if (clickOnce) {
       clickOnce = false;
       try {
-        await fetch(`${baseUrl}/post-x/profile-posts-delete`, {
+        await fetch(`${baseUrl}/post/profile-posts-delete`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt, photo }),

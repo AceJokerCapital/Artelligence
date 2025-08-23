@@ -7,12 +7,12 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import { CreatePost, Profile } from "../pages";
-import { Feed } from "../components";
-import Footer from "../components/layout/Footer";
-import Navbar from './../components/layout/Navbar';
+import { CreatePost, Profile } from "../src/pages";
+import { Feed } from "../src/components";
+import Footer from "../src/components/layout/Footer";
+import Navbar from '../src/components/layout/Navbar';
 
-const Home = () => {
+const HomeLayout = () => {
   //standard
  
   //state
@@ -35,4 +35,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomeLayout;
